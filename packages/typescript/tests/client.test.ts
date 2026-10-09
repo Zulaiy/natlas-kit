@@ -16,6 +16,33 @@ const response = (value: unknown, status = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 describe("speech SDK contract", () => {
+  it.each([
+    {},
+    [],
+    { ...job, status: "unexpected" },
+    { ...job, status: "completed", text: null },
+    { ...job, processing_seconds: -1 },
+  ])("rejects malformed job responses: %j", async (body) => {
+    const client = new NatlasClient({
+      baseUrl: "/api/speech",
+      fetch: vi.fn().mockResolvedValue(response(body)),
+    });
+    await expect(client.getTranscription("abc")).rejects.toThrow(
+      "invalid transcription response",
+    );
+  });
+  it("rejects invalid wait controls before submitting audio", async () => {
+    const fetcher = vi.fn();
+    const client = new NatlasClient({ baseUrl: "/api/speech", fetch: fetcher });
+    await expect(
+      client.transcribe({
+        audio: new Blob(["fixture"]),
+        language: "hausa",
+        pollIntervalMs: 0,
+      }),
+    ).rejects.toThrow("pollIntervalMs");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it("uploads multipart audio and polls until completed", async () => {
     const fetcher = vi
       .fn()

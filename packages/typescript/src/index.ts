@@ -50,6 +50,46 @@ export interface TranscribeOptions {
   pollIntervalMs?: number;
   onStatus?: (job: TranscriptionJob) => void;
 }
+function transcriptionJob(body: unknown): TranscriptionJob {
+  const invalid = () =>
+    new NatlasError(
+      "The speech service returned an invalid transcription response.",
+    );
+  if (!body || typeof body !== "object") throw invalid();
+  const job = body as Record<string, unknown>;
+  if (
+    typeof job.id !== "string" ||
+    !job.id ||
+    !["queued", "running", "completed", "failed"].includes(
+      job.status as string,
+    ) ||
+    !languages.some((item) => item.id === job.language) ||
+    typeof job.model !== "string" ||
+    !job.model
+  )
+    throw invalid();
+  for (const key of ["text", "error"] as const) {
+    if (job[key] != null && typeof job[key] !== "string") throw invalid();
+  }
+  if (job.status === "completed" && typeof job.text !== "string")
+    throw invalid();
+  for (const key of ["audio_duration_seconds", "processing_seconds"] as const) {
+    if (
+      job[key] != null &&
+      (typeof job[key] !== "number" ||
+        !Number.isFinite(job[key]) ||
+        (job[key] as number) < 0)
+    )
+      throw invalid();
+  }
+  return {
+    ...job,
+    text: job.text ?? null,
+    error: job.error ?? null,
+    audio_duration_seconds: job.audio_duration_seconds ?? null,
+    processing_seconds: job.processing_seconds ?? null,
+  } as unknown as TranscriptionJob;
+}
 function sleep(ms: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
     signal.throwIfAborted();
@@ -102,10 +142,12 @@ export class NatlasClient {
   models(signal?: AbortSignal) {
     return this.request<ModelInfo[]>("/v1/models", { signal });
   }
-  getTranscription(id: string, signal?: AbortSignal) {
-    return this.request<TranscriptionJob>(
-      `/v1/transcriptions/${encodeURIComponent(id)}`,
-      { signal },
+  async getTranscription(id: string, signal?: AbortSignal) {
+    return transcriptionJob(
+      await this.request<unknown>(
+        `/v1/transcriptions/${encodeURIComponent(id)}`,
+        { signal },
+      ),
     );
   }
   createTranscription({
@@ -127,13 +169,25 @@ export class NatlasClient {
         (audio.type.includes("webm") ? "recording.webm" : "recording.wav"),
     );
     form.append("language", language);
-    return this.request<TranscriptionJob>("/v1/transcriptions", {
+    return this.request<unknown>("/v1/transcriptions", {
       method: "POST",
       body: form,
       signal,
-    });
+    }).then(transcriptionJob);
   }
   async transcribe(options: TranscribeOptions): Promise<TranscriptionJob> {
+    if (
+      options.timeoutMs !== undefined &&
+      (!Number.isInteger(options.timeoutMs) ||
+        options.timeoutMs <= 0 ||
+        options.timeoutMs > Number.MAX_SAFE_INTEGER)
+    )
+      throw new NatlasError("timeoutMs must be a positive safe integer.");
+    if (
+      options.pollIntervalMs !== undefined &&
+      (!Number.isFinite(options.pollIntervalMs) || options.pollIntervalMs <= 0)
+    )
+      throw new NatlasError("pollIntervalMs must be positive and finite.");
     const timeout = AbortSignal.timeout(options.timeoutMs ?? 300_000);
     const signal = options.signal
       ? AbortSignal.any([options.signal, timeout])

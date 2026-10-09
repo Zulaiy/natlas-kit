@@ -30,6 +30,9 @@ class LocalTranscription:
 
 
 def decode_audio(path: str | Path, max_seconds: int = 30):
+    path = Path(path)
+    if not path.is_file() or not 0 < path.stat().st_size <= 10 * 1024 * 1024:
+        raise NatlasError("Choose a non-empty audio file smaller than 10 MB.")
     try:
         import numpy as np
     except ImportError as exc:
@@ -46,7 +49,7 @@ def decode_audio(path: str | Path, max_seconds: int = 30):
                 "-protocol_whitelist",
                 "file,pipe",
                 "-i",
-                str(path),
+                str(path.resolve()),
                 "-t",
                 str(max_seconds + 1),
                 "-vn",
@@ -107,7 +110,7 @@ class LocalSpeech:
                     from transformers import pipeline
                 except ImportError as exc:
                     raise NatlasError(
-                        "Install the Python package with the local extra: uv pip install -e 'packages/python[local]'."
+                        "Install the Python package with the local extra: uv pip install --torch-backend cpu -e 'packages/python[local]'."
                     ) from exc
                 self._pipeline = None
                 self._language = None

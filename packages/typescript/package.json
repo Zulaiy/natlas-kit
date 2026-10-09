@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "license": "MIT",
-  "description": "Python-friendly and TypeScript-native access to N-ATLAS speech services",
+  "description": "TypeScript and JavaScript SDK for official N-ATLAS speech model backends",
   "files": [
     "dist"
   ],

@@ -11,6 +11,12 @@ Copy `apps/web/.env.example` to `.env.local` in the same directory, set `NATLAS_
 
 Accept access terms for the selected official model. Set `HF_TOKEN` in the speech backend environment and check that the token has access. Health only verifies model access after a model has loaded successfully.
 
+The playground shows whether the selected language model is loaded. A connected service can still need its first model download.
+
+## Check the speech service credentials
+
+The backend rejected the website API key. Set the same `NATLAS_API_KEY` in the speech service and the website server environment, then restart the website. The playground checks authenticated model access as well as the health endpoint.
+
 ## Microphone unavailable
 
 Use HTTPS or localhost and allow microphone permission. Upload an audio file if the browser does not support MediaRecorder.

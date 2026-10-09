@@ -1071,6 +1071,12 @@ h2 {
   padding: 19px;
   margin-top: 22px;
 }
+.model-readiness {
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-top: 12px;
+}
 .setup-note strong {
   font-size: 12px;
   font-weight: 600;

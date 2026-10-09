@@ -29,13 +29,24 @@ Use Python 3.11+, uv and FFmpeg. Accept the official models' Hugging Face access
 
 ```bash
 uv venv
-uv pip install -e 'packages/python[local]' -e apps/api
+uv pip install --torch-backend cpu -e 'packages/python[local]' -e apps/api
 uv run --no-project uvicorn natlaskit_api.main:app --host 127.0.0.1 --port 8000 --workers 1
 ```
 
 Models load lazily. The starter accepts 30-second clips up to 10 MB and processes one job at a time. The model registry targets Hausa, Yoruba, Igbo and Nigerian-accented English. Support quality must be validated with actual recordings.
 
 Use `.venv/bin/python -m natlaskit doctor` to check CPU prerequisites. Add `--endpoint http://127.0.0.1:8000` to check a running service, or `--language english --check-access` to verify access to the small model configuration without downloading weights.
+
+## Transcribe from the command line
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language hausa
+uv run --no-project natlaskit transcribe recording.wav --language yoruba --local --json
+```
+
+The first command calls the speech service. The second runs the official model directly on the CPU and prints a JSON result. Use `--endpoint` or `NATLAS_API_URL` for a remote service and `NATLAS_API_KEY` for authentication. `--timeout 600` increases the remote wait limit; it does not limit local inference. Errors go to stderr with a nonzero exit code.
+
+See [the submission draft](docs/submission.md) and [the beta testing guide](benchmarks/beta-testing.md) for the remaining challenge evidence.
 
 ## Checks
 

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
+import type { Language } from "natlaskit";
 import { Check, Copy, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 export const snippets = {
@@ -7,13 +8,25 @@ export const snippets = {
   python: `from natlaskit import NatlasClient\n\nwith NatlasClient(\n    base_url='http://localhost:8000'\n) as natlas:\n    result = natlas.transcribe(\n        'recording.wav',\n        language='hausa',\n    )\n\nprint(result.text)`,
   react: `import { useTranscription } from '@natlaskit/react';\n\nconst { transcribe, job, busy } = useTranscription({\n  baseUrl: '/api/speech',\n});\n\n// Call from your record or upload handler.\nawait transcribe(audioFile, 'hausa');\n\n// Render job?.text in your own interface.`,
 };
-export function CodeTabs({ compact = false }: { compact?: boolean }) {
+export function CodeTabs({
+  compact = false,
+  language = "hausa",
+}: {
+  compact?: boolean;
+  language?: Language;
+}) {
+  const id = useId();
   const [active, setActive] = useState<keyof typeof snippets>("typescript");
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
+  const code = snippets[active].replaceAll("'hausa'", JSON.stringify(language));
+  useEffect(() => {
+    setCopied(false);
+    setCopyError(false);
+  }, [language]);
   async function copy() {
     try {
-      await navigator.clipboard.writeText(snippets[active]);
+      await navigator.clipboard.writeText(code);
       setCopied(true);
       setCopyError(false);
     } catch {
@@ -26,10 +39,10 @@ export function CodeTabs({ compact = false }: { compact?: boolean }) {
         {(["typescript", "python", "react"] as const).map((item) => (
           <button
             key={item}
-            id={`tab-${compact}-${item}`}
+            id={`${id}-tab-${item}`}
             role="tab"
             aria-selected={active === item}
-            aria-controls={`code-${compact}`}
+            aria-controls={`${id}-code`}
             onClick={() => {
               setActive(item);
               setCopied(false);
@@ -48,12 +61,12 @@ export function CodeTabs({ compact = false }: { compact?: boolean }) {
         </button>
       </div>
       <pre
-        id={`code-${compact}`}
+        id={`${id}-code`}
         role="tabpanel"
-        aria-labelledby={`tab-${compact}-${active}`}
+        aria-labelledby={`${id}-tab-${active}`}
       >
         <code>
-          {snippets[active].split("\n").map((line, i) => (
+          {code.split("\n").map((line, i) => (
             <span className="code-line" key={i}>
               <span className="line-number" aria-hidden="true">
                 {i + 1}

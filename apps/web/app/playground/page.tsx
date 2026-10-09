@@ -1,6 +1,5 @@
 import { Header, Footer } from "@/components/chrome";
 import { Playground } from "@/components/playground";
-import { CodeTabs } from "@/components/code-tabs";
 import { languages, type Language } from "natlaskit";
 export const metadata = { title: "Speech playground" };
 export default async function Page({
@@ -29,21 +28,6 @@ export default async function Page({
           </p>
         </div>
         <Playground initialLanguage={selected} />
-        <section className="section playground-code">
-          <div>
-            <div className="eyebrow">TAKE IT INTO YOUR CODE</div>
-            <h2>
-              Same model.
-              <br />
-              Your application.
-            </h2>
-            <p>
-              These examples use the SDK interfaces behind this playground.
-              Follow the quickstart to install from the repository.
-            </p>
-          </div>
-          <CodeTabs compact />
-        </section>
       </main>
       <Footer />
     </>

@@ -26,7 +26,7 @@ For manual job control, use `create_transcription()` and `get_transcription()`.
 ## Run locally
 
 ```bash
-uv pip install -e 'packages/python[local]'
+uv pip install --torch-backend cpu -e 'packages/python[local]'
 ```
 
 ```python
@@ -38,6 +38,17 @@ print(result.text)
 ```
 
 Local inference requires FFmpeg, model access and `HF_TOKEN`. Audio is decoded into mono 16 kHz samples. The starter accepts at most 30 seconds and keeps one model loaded at a time. Switching languages loads a different official model.
+
+The installation command selects [CPU PyTorch explicitly through uv](https://docs.astral.sh/uv/reference/cli/#uv-pip-install--torch-backend), so dependency resolution keeps the CPU backend. The adapter uses the `dtype` option available in [Transformers 4.56 and later](https://huggingface.co/docs/transformers/v4.56.2/en/main_classes/pipelines).
+
+You can also use the SDK from a terminal:
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language hausa --json
+uv run --no-project natlaskit transcribe recording.wav --language hausa --local
+```
+
+Both SDKs validate the job response. An unknown status or malformed completed result raises `NatlasError` instead of being treated as a successful transcript. An empty completed transcript means that the model returned no detected speech.
 
 ## Credentials
 

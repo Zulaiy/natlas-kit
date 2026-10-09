@@ -14,10 +14,10 @@ git clone https://github.com/Zulaiy/natlas-kit.git
 cd natlas-kit
 pnpm install
 uv venv
-uv pip install -e 'packages/python[local]' -e apps/api
+uv pip install --torch-backend cpu -e 'packages/python[local]' -e apps/api
 ```
 
-The local extra installs PyTorch, Transformers, and NumPy. For a smaller CPU PyTorch installation, install PyTorch from its official CPU wheel index before installing the local extra. Install FFmpeg through your operating system package manager.
+Use a recent uv version with [explicit CPU backend selection](https://docs.astral.sh/uv/reference/cli/#uv-pip-install--torch-backend). This selects CPU PyTorch while the local extra adds Transformers and NumPy. For platform-specific PyTorch guidance, see [the official installation guide](https://pytorch.org/get-started/locally/). Install FFmpeg through your operating system package manager.
 
 ## Start the speech service
 
@@ -32,11 +32,19 @@ The model loads when the first recording is submitted. A first request may take 
 Check prerequisites before submitting a recording:
 
 ```bash
-python -m natlaskit doctor --endpoint http://127.0.0.1:8000
-python -m natlaskit doctor --language english --check-access
+uv run --no-project natlaskit doctor --endpoint http://127.0.0.1:8000
+uv run --no-project natlaskit doctor --language english --check-access
 ```
 
 Run these commands with the installed virtual environment's Python. The access check downloads only the small model configuration and never prints your token. It does not establish speech accuracy or inference performance.
+
+Submit a recording before opening the playground:
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language hausa --timeout 600 --json
+```
+
+Use `--local` to run the model directly without starting the HTTP service. See [the command-line guide](/docs/cli) for the available options.
 
 ## Start the website
 

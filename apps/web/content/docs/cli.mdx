@@ -1,0 +1,43 @@
+---
+title: Command line
+description: Check your CPU setup and transcribe a recording without writing code.
+---
+
+## Check your setup
+
+Install the Python SDK from source using the [quickstart](/docs/quickstart), then run:
+
+```bash
+uv run --no-project natlaskit doctor
+uv run --no-project natlaskit doctor --language hausa --check-access
+```
+
+The doctor reports missing dependencies and model access separately. An access check downloads only the model configuration. The report never prints your token. Doctor is a diagnostic report and exits successfully even when a prerequisite is missing; inspect its checks and hints.
+
+## Call the service
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language hausa --json
+```
+
+The default endpoint is `http://127.0.0.1:8000`. Set `NATLAS_API_URL` or pass `--endpoint` to use another service. Set `NATLAS_API_KEY` in your environment if the backend requires authentication.
+
+The command prints the transcript by default. `--json` includes the job ID, official model ID and available duration and processing metadata. Errors go to stderr and return exit code 1; invalid options return exit code 2.
+
+## Run directly on the CPU
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language yoruba --local --json
+```
+
+`--local` uses the official Hugging Face model directly, without an HTTP server. It needs the local Python extra, FFmpeg and model access. Supported language values are `hausa`, `yoruba`, `igbo` and `english`. Clips must be non-empty, at most 10 MB and no longer than 30 seconds.
+
+## Wait for the first download
+
+```bash
+uv run --no-project natlaskit transcribe recording.wav --language english --timeout 600
+```
+
+The remote wait limit defaults to 300 seconds. It includes upload and polling, and a timeout can leave an accepted job processing on the server. Local inference is not limited by this setting. Pressing Ctrl+C stops waiting and returns exit code 130.
+
+For repeated local requests, use one `LocalSpeech` instance in Python or run the speech service so the loaded model can be reused. Each CLI invocation creates a new local model instance.

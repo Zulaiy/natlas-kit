@@ -327,11 +327,13 @@ export function TranscriptionPanel({
         ) : (
           <p>
             {text ||
-              (status === "queued"
-                ? "Waiting for the speech service…"
-                : status === "running"
-                  ? "Transcribing your recording…"
-                  : "Your transcript will appear here.")}
+              (status === "completed"
+                ? "No speech was detected. Try a clearer recording or check the selected language."
+                : status === "queued"
+                  ? "Waiting for the speech service…"
+                  : status === "running"
+                    ? "Transcribing your recording…"
+                    : "Your transcript will appear here.")}
           </p>
         )}
         {copyError && (

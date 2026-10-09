@@ -4,12 +4,14 @@
     "index",
     "quickstart",
     "python",
+    "cli",
     "typescript",
     "react",
     "models",
     "api",
     "deployment",
     "troubleshooting",
+    "beta-testing",
     "contributing"
   ]
 }
