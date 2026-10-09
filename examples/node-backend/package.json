@@ -1,0 +1,8 @@
+{
+  "name": "natlaskit-node-example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "natlaskit": "workspace:*"
+  }
+}

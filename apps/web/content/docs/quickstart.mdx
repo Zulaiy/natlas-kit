@@ -1,0 +1,55 @@
+---
+title: Your first transcription
+description: From the repository to a real N-ATLAS transcript.
+---
+
+## Prerequisites
+
+Use Node.js 22+, pnpm, Python 3.11+, uv, and FFmpeg. Model downloads also require internet access and a Hugging Face account. Accept the access terms for each model you intend to use on the [official NCAIR organisation](https://huggingface.co/NCAIR1).
+
+## Install the toolkit
+
+```bash
+git clone https://github.com/Zulaiy/natlas-kit.git
+cd natlas-kit
+pnpm install
+uv venv
+uv pip install -e 'packages/python[local]' -e apps/api
+```
+
+The local extra installs PyTorch, Transformers, and NumPy. For a smaller CPU PyTorch installation, install PyTorch from its official CPU wheel index before installing the local extra. Install FFmpeg through your operating system package manager.
+
+## Start the speech service
+
+Export your Hugging Face access token as `HF_TOKEN` in the service environment. Never put it in browser code or commit it.
+
+```bash
+uv run --no-project uvicorn natlaskit_api.main:app --host 127.0.0.1 --port 8000 --workers 1
+```
+
+The model loads when the first recording is submitted. A first request may take longer while weights download. The service retains one language model at a time.
+
+Check prerequisites before submitting a recording:
+
+```bash
+python -m natlaskit doctor --endpoint http://127.0.0.1:8000
+python -m natlaskit doctor --language english --check-access
+```
+
+Run these commands with the installed virtual environment's Python. The access check downloads only the small model configuration and never prints your token. It does not establish speech accuracy or inference performance.
+
+## Start the website
+
+In a second terminal, copy `apps/web/.env.example` to `apps/web/.env.local` and set `NATLAS_API_URL=http://127.0.0.1:8000`.
+
+```bash
+pnpm dev
+```
+
+Open `/playground`, choose the language of your recording, and record or upload a clip up to 30 seconds. A successful request returns a transcript from the selected official N-ATLAS model.
+
+## Use it in your own application
+
+Follow the [Python guide](/docs/python), [TypeScript guide](/docs/typescript), or [React guide](/docs/react). The playground uses the same package interfaces.
+
+A connected service is not proof of model access: health reports `model_access_verified` only after a model loads successfully.

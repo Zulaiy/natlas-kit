@@ -1,0 +1,13 @@
+packages:
+  - apps/web
+  - packages/typescript
+  - packages/react
+  - examples/node-backend
+allowBuilds:
+  esbuild: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - "@fumadocs/tailwind@0.1.3"
+  - fumadocs-core@16.17.1
+  - fumadocs-mdx@15.4.7
+  - fumadocs-ui@16.17.1

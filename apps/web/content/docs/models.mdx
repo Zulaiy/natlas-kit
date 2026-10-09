@@ -1,0 +1,25 @@
+---
+title: Official language models
+description: Explicit language selection and model provenance.
+---
+
+The speech service selects official NCAIR models by language. Choose the language the speaker actually uses; this starter does not automatically detect language.
+
+| Language value | Official model |
+| --- | --- |
+| `hausa` | [NCAIR1/Hausa-ASR](https://huggingface.co/NCAIR1/Hausa-ASR) |
+| `yoruba` | [NCAIR1/Yoruba-ASR](https://huggingface.co/NCAIR1/Yoruba-ASR) |
+| `igbo` | [NCAIR1/Igbo-ASR](https://huggingface.co/NCAIR1/Igbo-ASR) |
+| `english` | [NCAIR1/NigerianAccentedEnglish](https://huggingface.co/NCAIR1/NigerianAccentedEnglish) |
+
+These are separate Whisper Small derivatives. Each repository lists a weight file of approximately 967 MB. Runtime memory is greater than the download size. The service keeps one model loaded, so switching language incurs a load delay.
+
+## Access and terms
+
+Accept each repository's access terms and configure `HF_TOKEN` for the speech process. Model terms are separate from this toolkit's MIT code licence. Preserve model attribution and review the official usage terms before deployment or redistribution.
+
+## Validation status
+
+Adapters are configured for all four models. Real-model inference and accuracy have not yet been validated in this repository. Developer tests use clearly labelled fixtures and do not establish speech quality.
+
+For validation, record consented samples in each tested language and report model ID, recording conditions, duration, transcription, correction rate, latency and memory. Do not claim realtime transcription from this batch starter.

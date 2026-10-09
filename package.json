@@ -1,0 +1,12 @@
+{
+  "name": "natlaskit-workspace",
+  "private": true,
+  "packageManager": "pnpm@11.12.0",
+  "scripts": {
+    "dev": "pnpm build:packages && pnpm --filter @natlaskit/web dev",
+    "build:packages": "pnpm --filter natlaskit --filter @natlaskit/react build",
+    "build": "pnpm build:packages && pnpm --filter @natlaskit/web build",
+    "typecheck": "pnpm build:packages && pnpm -r typecheck",
+    "test": "pnpm --filter natlaskit test"
+  }
+}

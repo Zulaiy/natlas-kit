@@ -1,0 +1,29 @@
+name: Checks
+on:
+  push:
+  pull_request:
+jobs:
+  web-and-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:packages
+      - run: pnpm -r typecheck
+      - run: pnpm test
+      - run: pnpm --filter @natlaskit/web build
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv venv --python 3.12
+      - run: uv pip install -e packages/python -e apps/api pytest numpy
+      - run: .venv/bin/python -m pytest tests
+      - run: .venv/bin/python scripts/export_openapi.py
+      - run: git diff --exit-code contracts/openapi.json apps/web/content/docs/api.mdx

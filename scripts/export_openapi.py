@@ -1,0 +1,54 @@
+from pathlib import Path
+import json
+from natlaskit_api.main import app
+
+root = Path(__file__).resolve().parents[1]
+schema = app.openapi()
+target = root / "contracts/openapi.json"
+target.parent.mkdir(exist_ok=True)
+target.write_text(json.dumps(schema, indent=2) + "\n")
+rows = []
+for path, operations in schema["paths"].items():
+    for method, operation in operations.items():
+        rows.append(
+            f"| `{method.upper()}` | `{path}` | {operation.get('summary', '')} |"
+        )
+page = (
+    """---
+title: Speech API reference
+description: Generated from the actual FastAPI OpenAPI contract.
+---
+
+This is natlaskit's independently hosted API around the official N-ATLAS speech models. Configure a backend URL; it is not the official N-ATLAS hosted API.
+
+## Endpoints
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+"""
+    + "\n".join(rows)
+    + """
+
+## Submit audio
+
+`POST /v1/transcriptions` accepts multipart form fields `audio` (file) and `language` (`hausa`, `yoruba`, `igbo`, or `english`). It returns HTTP 202 with a job object. Audio must be non-empty, at most 10 MB and no longer than 30 seconds after decoding.
+
+## Job lifecycle
+
+Poll `GET /v1/transcriptions/{id}`. Status changes from `queued` to `running`, then `completed` or `failed`. Completed jobs include `text`, `model`, `language`, `audio_duration_seconds`, and `processing_seconds`. Failed jobs include an actionable `error`.
+
+The Python and TypeScript SDKs handle polling automatically. A polling timeout does not cancel the server job.
+
+## Authentication and errors
+
+If `NATLAS_API_KEY` is configured on the speech backend, send `Authorization: Bearer YOUR_API_KEY`. Keep this credential in your application backend. Health is public; model and transcription endpoints require the configured key.
+
+Empty or oversized uploads return 400; unsupported language values return 422; a full queue returns 429. Missing or expired jobs return 404. Model-loading and inference errors appear as failed jobs.
+
+## Explore the schema
+
+The running FastAPI service exposes `/openapi.json` and an interactive `/docs` reference. The repository's `contracts/openapi.json` is generated from the same application. Regenerate with `.venv/bin/python scripts/export_openapi.py`.
+"""
+)
+(root / "apps/web/content/docs/api.mdx").write_text(page)
+print("Exported API contract and documentation.")

@@ -1,0 +1,44 @@
+---
+title: Python SDK
+description: Remote transcription and local Transformers inference.
+---
+
+## Install from source
+
+```bash
+uv pip install -e packages/python
+```
+
+## Call the speech service
+
+```python
+from natlaskit import NatlasClient
+
+with NatlasClient(base_url="http://127.0.0.1:8000") as client:
+    result = client.transcribe("recording.wav", language="hausa")
+    print(result.text)
+```
+
+`transcribe()` submits the recording and polls until completion. It raises `NatlasError` for backend failures and times out after 300 seconds by default. A timeout stops waiting; the server job may still complete.
+
+For manual job control, use `create_transcription()` and `get_transcription()`.
+
+## Run locally
+
+```bash
+uv pip install -e 'packages/python[local]'
+```
+
+```python
+from natlaskit import LocalSpeech
+
+speech = LocalSpeech()
+result = speech.transcribe("recording.wav", language="hausa")
+print(result.text)
+```
+
+Local inference requires FFmpeg, model access and `HF_TOKEN`. Audio is decoded into mono 16 kHz samples. The starter accepts at most 30 seconds and keeps one model loaded at a time. Switching languages loads a different official model.
+
+## Credentials
+
+For a protected API, pass `api_key` to `NatlasClient`. Keep both API and Hugging Face tokens in your backend environment.

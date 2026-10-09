@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.source/
+dist/
+*.tsbuildinfo
+.env
+.env.local
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+*.sqlite3
+.runtime/
+playwright-report/
+test-results/

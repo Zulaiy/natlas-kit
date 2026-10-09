@@ -1,0 +1,35 @@
+---
+title: Contributing
+description: Help make N-ATLAS easier to build with.
+---
+
+## Development
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Python tests do not require downloading model weights:
+
+```bash
+uv venv
+uv pip install -e packages/python -e apps/api pytest numpy
+uv run --no-project pytest tests
+```
+
+## Checks
+
+```bash
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+Regenerate the OpenAPI contract and API reference with `.venv/bin/python scripts/export_openapi.py` after backend schema changes.
+
+## Contributions
+
+Open an issue describing the developer problem, then contribute a focused change with a runnable example. Include tests when changing SDK contracts, audio handling or job behaviour. Keep all examples aligned with the actual API.
+
+Do not commit credentials, user recordings, model weights, or generated runtime files. Use labelled fixtures for automated tests. Actual model benchmarks should document hardware, model revision, audio provenance and methodology.

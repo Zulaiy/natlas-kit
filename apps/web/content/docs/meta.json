@@ -1,0 +1,15 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "quickstart",
+    "python",
+    "typescript",
+    "react",
+    "models",
+    "api",
+    "deployment",
+    "troubleshooting",
+    "contributing"
+  ]
+}

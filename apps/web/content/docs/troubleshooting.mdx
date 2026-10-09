@@ -1,0 +1,36 @@
+---
+title: Troubleshooting
+description: Resolve common setup and audio issues.
+---
+
+## No speech service configured
+
+Copy `apps/web/.env.example` to `.env.local` in the same directory, set `NATLAS_API_URL`, and restart the Next.js server. Without it, recording and upload previews work, but transcription is disabled.
+
+## Service connected, model fails to load
+
+Accept access terms for the selected official model. Set `HF_TOKEN` in the speech backend environment and check that the token has access. Health only verifies model access after a model has loaded successfully.
+
+## Microphone unavailable
+
+Use HTTPS or localhost and allow microphone permission. Upload an audio file if the browser does not support MediaRecorder.
+
+## FFmpeg required
+
+Install FFmpeg through your operating system package manager and ensure `ffmpeg` is on the speech process PATH. Restart the backend after installation.
+
+## Audio is too long
+
+The CPU starter accepts clips up to 30 seconds. Split a longer recording into short clips. Longer-file chunking is a future extension, not an implemented feature.
+
+## First request is slow
+
+The first request can download and initialise the model. Subsequent requests in the same language reuse it. Switching languages loads another model. Benchmark the actual CPU before making latency claims.
+
+## Polling timed out
+
+The SDK stops waiting after its configured timeout; an accepted server job may continue. Use its job ID to retrieve the result rather than immediately submitting duplicate work.
+
+## Transcription not found
+
+Completed results are temporary and may have expired. Service restarts mark unfinished jobs as failed; submit a fresh recording after checking model access.

@@ -1,0 +1,49 @@
+---
+title: TypeScript SDK
+description: The same speech service from JavaScript and Node.js.
+---
+
+## Install from the workspace
+
+The SDK lives in `packages/typescript` and builds to ESM with TypeScript declarations.
+
+```bash
+pnpm build:packages
+```
+
+This release is not yet on npm. Within the monorepo use `"natlaskit": "workspace:*"`; for external projects, create a package tarball with `pnpm --filter natlaskit pack` and install that tarball.
+
+## Transcribe a recording
+
+```ts
+import { NatlasClient } from 'natlaskit';
+
+const client = new NatlasClient({
+  baseUrl: 'http://127.0.0.1:8000',
+});
+
+const result = await client.transcribe({
+  audio: audioFile,
+  language: 'hausa',
+});
+console.log(result.text);
+```
+
+`audio` is a Blob or File. In Node.js, wrap file bytes in a Blob. The complete runnable example is in `examples/node-backend/transcribe.mjs`.
+
+## Progress and cancellation
+
+```ts
+const controller = new AbortController();
+const result = await client.transcribe({
+  audio: audioFile,
+  language: 'english',
+  signal: controller.signal,
+  onStatus: (job) => console.log(job.status),
+  timeoutMs: 300_000,
+});
+```
+
+Cancellation stops upload or polling, but does not cancel an already accepted server job. `createTranscription()` and `getTranscription()` expose manual control. `models()` lists configured official models and their loaded status.
+
+SDK errors are `NatlasError` instances. Failed jobs surface the backend error; submission is not automatically retried.
