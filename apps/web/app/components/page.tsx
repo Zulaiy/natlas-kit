@@ -1,31 +1,46 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight, Braces } from "lucide-react";
 import { Header, Footer } from "@/components/chrome";
 import { ComponentDemos } from "@/components/component-demos";
-export const metadata = { title: "React components" };
+export const metadata = { title: "Audio components" };
 export default function Page() {
   return (
-    <>
+    <div className="kit-page">
       <Header />
-      <main className="site-container">
-        <div className="page-intro">
-          <div className="eyebrow">THE BUILDING BLOCKS</div>
-          <h1>
-            A little less setup.
-            <br />
-            <span>A lot more you.</span>
-          </h1>
-          <p>
-            Composable React components for speech interfaces. Try them here,
-            then use the same package in your application.
-          </p>
-          <Link className="text-link" href="/docs/react">
-            Installation and API guide <ArrowRight size={16} />
-          </Link>
+      <main className="kit-container">
+        <div className="kit-breadcrumb">
+          <span>Build</span>
+          <span>/</span>Component library
+        </div>
+        <div className="kit-page-heading">
+          <div>
+            <span className="kit-overline">
+              <Braces size={13} /> THE AUDIO INTERFACE KIT
+            </span>
+            <h1>
+              Good interfaces start
+              <br />
+              with great components.
+            </h1>
+            <p>
+              Expressive, composable audio components for N-ATLAS.
+              <br />
+              Built to feel at home in your next application.
+            </p>
+          </div>
+          <div className="kit-heading-side">
+            <div className="kit-version">
+              <i />
+              React 19<span>MIT licensed</span>
+            </div>
+            <Link href="/docs/react">
+              Get started <ArrowUpRight size={14} />
+            </Link>
+          </div>
         </div>
         <ComponentDemos />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

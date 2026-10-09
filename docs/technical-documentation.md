@@ -66,6 +66,12 @@ The service accepts clips up to 10 MB and 30 seconds and limits pending or runni
 
 SDKs validate job response shape and known states. Invalid responses raise NatlasError. A completed empty transcript means that the model returned no detected speech. The playground identifies disconnected services, rejected API credentials and the selected model's loaded state.
 
+## React audio library
+
+Import `@natlaskit/react/styles.css` once in your application entry. The standalone stylesheet supports light and dark themes and CSS variable overrides. The library includes AudioRecorder, AudioPlayer, AudioUploader, LiveWaveform, Waveform, ScrubBar, VoiceButton, MicSelector, LanguageSelector, TranscriptViewer and SpeechStatus, plus recording and transcription hooks.
+
+Recording supports pause, resume, discard and microphone selection. Live levels come from the actual microphone stream; player waveforms are decoded from the selected file. Transcript text and JSON can be copied or downloaded. The studio uses these same reusable controls. See the React documentation for props and integration examples.
+
 ## Audio and result retention
 
 Uploaded audio is stored temporarily and deleted after processing, including failures. Unfinished jobs are marked failed on a service restart, and abandoned audio files are removed. Completed and failed job records older than an hour are removed when new jobs are submitted. Applications needing durable transcripts should save completed results in their own storage.
@@ -78,7 +84,7 @@ Shared queues, multi-instance inference, streaming transcription and long record
 
 ## Validation and evidence
 
-Automated tests use labelled fixtures to exercise uploads, job processing and failures, audio constraints, SDK response validation, command-line behaviour and credential handling. Browser checks cover recording, upload, SDK examples, documentation search and mobile layout.
+Automated tests use labelled fixtures to exercise uploads, job processing and failures, audio constraints, SDK response validation, command-line behaviour and credential handling. Browser checks cover recording, pause/resume, microphone cleanup, waveform playback and seeking, drag-and-drop upload, transcript actions, themes, SDK examples, documentation search and mobile layout. The five Playwright regression tests run with `pnpm --filter @natlaskit/web test:ui` against the built website; install Chromium first with `pnpm --filter @natlaskit/web exec playwright install chromium`.
 
 Real N-ATLAS transcription still requires authorised model access and recordings. For challenge evidence, collect the model revision, hardware, cold and warm timing, reference transcript, actual transcript and external developer session records. See benchmarks/beta-testing.md for the procedure.
 

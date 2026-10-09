@@ -1,25 +1,75 @@
-# natlaskit React Components
+# natlaskit audio components
 
-Add audio recording, uploads, language selection and transcript display to a React 19 application. The package exports AudioRecorder, AudioUploader, LanguageSelector, TranscriptionPanel, useRecorder and useTranscription.
+A styled React 19 audio library for N-ATLAS applications: recording, live microphone levels, waveform playback, drag-and-drop upload, language selection and transcript results.
 
-This is a source release. Build the monorepo packages and install locally packed natlaskit and @natlaskit/react tarballs in your application. They are not published on npm yet.
+This is a source release. Build the monorepo with `pnpm build:packages` and install locally packed `natlaskit` and `@natlaskit/react` tarballs together. They are not published on npm yet.
+
+Import the bundled stylesheet once, in your application entry or Next.js root layout:
 
 ```tsx
-import { useCallback, useState } from 'react';
-import { AudioRecorder, TranscriptionPanel, useTranscription } from '@natlaskit/react';
+import "@natlaskit/react/styles.css";
+```
+
+```tsx
+"use client";
+import { useState } from "react";
+import {
+  AudioRecorder,
+  AudioPlayer,
+  TranscriptViewer,
+  useTranscription,
+} from "@natlaskit/react";
 
 export function SpeechInput() {
   const [audio, setAudio] = useState<Blob | null>(null);
-  const onAudio = useCallback((blob: Blob) => setAudio(blob), []);
-  const { transcribe, job, status, error, busy } = useTranscription({ baseUrl: '/api/speech' });
-  return <>
-    <AudioRecorder onAudio={onAudio} disabled={busy} />
-    <button disabled={!audio || busy} onClick={() => audio && transcribe(audio, 'hausa')}>Transcribe</button>
-    <TranscriptionPanel text={job?.text} status={status} error={error} />
-  </>;
+  const [capturing, setCapturing] = useState(false);
+  const { transcribe, job, status, error, busy } = useTranscription({
+    baseUrl: "/api/speech",
+  });
+  return (
+    <>
+      <AudioRecorder
+        onAudio={setAudio}
+        onRecordingChange={setCapturing}
+        disabled={busy}
+      />
+      {audio && <AudioPlayer audio={audio} name="Your recording" />}
+      <button
+        disabled={!audio || busy || capturing}
+        onClick={() => audio && transcribe(audio, "hausa")}
+      >
+        Transcribe
+      </button>
+      <TranscriptViewer job={job} status={status} error={error} />
+    </>
+  );
 }
 ```
 
-Use a server proxy and keep credentials in the server environment. Components provide semantic HTML with nk-* classes; supply your own CSS. The website stylesheet is a reference. Browser recording needs localhost or HTTPS and microphone permission. AudioRecorder defaults to a 30-second maximum.
+## Components
 
-See the [Next.js example](https://github.com/Zulaiy/natlas-kit/tree/main/examples/nextjs-transcription). Toolkit code is MIT licensed. The official speech models retain their own access and licensing terms.
+| Component                                 | Key props                                                | Behaviour                                                                                                 |
+| ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `AudioRecorder`                           | `onAudio`, `maxSeconds`, `disabled`, `onRecordingChange` | Input selection, live waveform, timer, pause/resume, discard and finish. Default limit: 30 seconds.       |
+| `AudioPlayer`                             | `audio` (Blob), `name`, `onRemove`, `disabled`           | Decodes a waveform from the file; play/pause, seek, skip, speed and mute. `disabled` locks removal.       |
+| `AudioUploader`                           | `onAudio`, `disabled`, `className`                       | Drop or browse one non-empty audio file, up to 10 MB.                                                     |
+| `LiveWaveform`                            | `stream`, `active`, `className`                          | Displays actual microphone samples; renders a baseline at rest. Does not own or stop the supplied stream. |
+| `Waveform`                                | `peaks`, `progress`, `className`                         | Renders amplitudes between 0 and 1. Progress is a fraction from 0 to 1.                                   |
+| `ScrubBar`                                | `peaks`, `value`, `duration`, `onChange`, `disabled`     | Keyboard-accessible seek control. Value and duration are seconds.                                         |
+| `VoiceButton`                             | `state`, `onClick`, `disabled`, `children`               | Idle, connecting, recording, paused and processing states.                                                |
+| `MicSelector`                             | `value`, `onChange`, `disabled`                          | Selects a device ID. Requests permission only through its explicit input-access action.                   |
+| `LanguageSelector`                        | `value`, `onChange`, `disabled`, `className`             | Official Hausa, Yoruba, Igbo and Nigerian English models.                                                 |
+| `TranscriptViewer` / `TranscriptionPanel` | `job`, `text`, `status`, `error`, `onRetry`              | Text/JSON tabs, copy/download, job metadata and empty/loading/failure states.                             |
+| `SpeechStatus`                            | `status`                                                 | Idle, queued, running, completed or failed status.                                                        |
+
+## Hooks and styling
+
+`useRecorder({ maxSeconds, deviceId })` returns `recording`, `paused`, `starting`, `elapsed`, `audio`, `mediaStream`, `error`, `start`, `stop`, `pause`, `resume` and `clear`. `recording` stays true while paused; `elapsed` excludes pauses. Tracks stop after finish, discard or unmount. `AudioRecorder.onRecordingChange` also reports microphone setup, so a parent can lock competing actions.
+
+`useTranscription({ baseUrl, apiKey? })` returns `job`, `status`, `error`, `busy`, `transcribe` and `reset`. Reset and unmount cancel polling. Use a server proxy and keep credentials in the server environment.
+
+Wrap a preview in `<div data-nk-theme="dark">` for dark styling, or override `--nk-bg`, `--nk-ink`, `--nk-accent`, `--nk-muted`, `--nk-line` and `--nk-soft` to match your application. The stylesheet is standalone; Tailwind and the website stylesheet are not required. Controls support keyboard focus and reduced motion.
+
+Browser recording requires localhost or HTTPS and microphone permission. Audio playback and waveform decoding depend on browser codec support. The transcript is a whole-clip result: the library does not invent streaming speech, timestamps or speakers.
+
+See the [Next.js example](https://github.com/Zulaiy/natlas-kit/tree/main/examples/nextjs-transcription). Toolkit code is MIT licensed. Official models retain their own access and licensing terms.

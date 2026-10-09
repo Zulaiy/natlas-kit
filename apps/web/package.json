@@ -6,26 +6,28 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:ui": "playwright test"
   },
   "dependencies": {
-    "next": "16.4.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "@natlaskit/react": "workspace:*",
     "fumadocs-core": "16.17.1",
-    "fumadocs-ui": "16.17.1",
     "fumadocs-mdx": "15.4.7",
+    "fumadocs-ui": "16.17.1",
     "lucide-react": "^0.468.0",
     "natlaskit": "workspace:*",
-    "@natlaskit/react": "workspace:*"
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/mdx": "^2.0.13",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "@types/mdx": "^2.0.13",
     "tailwindcss": "^4.1.0",
-    "@tailwindcss/postcss": "^4.1.0"
+    "typescript": "^5.9.3"
   }
 }

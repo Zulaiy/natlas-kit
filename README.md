@@ -7,7 +7,7 @@ Python and TypeScript SDKs, React components, and practical documentation for bu
 - Next.js landing page, speech playground, examples and Fumadocs documentation.
 - Python HTTP SDK and optional local Hugging Face Transformers adapter.
 - TypeScript SDK with multipart uploads, asynchronous job polling and cancellation.
-- React recorder, uploader, language selector, transcript panel and hooks.
+- Styled React audio library with recording, live levels, waveform playback, upload, transcript actions and hooks.
 - CPU FastAPI speech service, single worker, temporary job storage and OpenAPI contract.
 
 This is a source release: packages are not yet on npm/PyPI. Real N-ATLAS inference requires model access, `HF_TOKEN`, FFmpeg and local inference dependencies. Automated tests use labelled fixtures; real-model accuracy and CPU benchmarks remain to be collected.

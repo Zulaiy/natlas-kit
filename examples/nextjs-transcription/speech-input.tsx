@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import {
+  AudioPlayer,
   AudioRecorder,
   AudioUploader,
   LanguageSelector,
@@ -9,6 +10,7 @@ import {
 } from "@natlaskit/react";
 import type { Language } from "natlaskit";
 export function SpeechInput() {
+  const [capturing, setCapturing] = useState(false);
   const [audio, setAudio] = useState<Blob | null>(null);
   const [language, setLanguage] = useState<Language>("english");
   const { transcribe, job, status, error, busy } = useTranscription({
@@ -20,17 +22,22 @@ export function SpeechInput() {
       <LanguageSelector
         value={language}
         onChange={setLanguage}
+        disabled={busy || capturing}
+      />
+      <AudioRecorder
+        onAudio={onAudio}
+        onRecordingChange={setCapturing}
         disabled={busy}
       />
-      <AudioRecorder onAudio={onAudio} disabled={busy} />
-      <AudioUploader onAudio={onAudio} disabled={busy} />
+      {audio && <AudioPlayer audio={audio} />}
+      <AudioUploader onAudio={onAudio} disabled={busy || capturing} />
       <button
-        disabled={!audio || busy}
+        disabled={!audio || busy || capturing}
         onClick={() => audio && transcribe(audio, language)}
       >
         Transcribe
       </button>
-      <TranscriptionPanel text={job?.text} status={status} error={error} />
+      <TranscriptionPanel job={job} status={status} error={error} />
     </>
   );
 }

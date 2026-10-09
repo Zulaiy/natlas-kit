@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import "./globals.css";
+import "@natlaskit/react/styles.css";
 export const metadata: Metadata = {
   title: {
     default: "natlaskit — Nigerian speech, ready to build with.",

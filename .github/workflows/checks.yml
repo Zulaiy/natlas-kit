@@ -17,6 +17,8 @@ jobs:
       - run: pnpm -r typecheck
       - run: pnpm test
       - run: pnpm --filter @natlaskit/web build
+      - run: pnpm --filter @natlaskit/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @natlaskit/web test:ui
   python:
     runs-on: ubuntu-latest
     steps:
