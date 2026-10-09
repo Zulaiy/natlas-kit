@@ -4,6 +4,7 @@ import { Logo } from "@/components/chrome";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <DocsLayout
+      themeSwitch={{ enabled: false }}
       tree={source.pageTree}
       nav={{ title: <Logo /> }}
       links={[

@@ -13,7 +13,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <RootProvider>{children}</RootProvider>
+        <RootProvider theme={{ forcedTheme: "light", enableSystem: false }}>
+          {children}
+        </RootProvider>
       </body>
     </html>
   );
