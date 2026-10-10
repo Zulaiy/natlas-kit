@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Github } from "lucide-react";
+import { SiteNavigation } from "./site-navigation";
 export function Logo() {
   return (
     <span className="brand">
@@ -21,46 +22,75 @@ export function Header() {
         <Link href="/" aria-label="natlaskit home">
           <Logo />
         </Link>
-        <nav aria-label="Main navigation">
-          <Link href="/docs">Documentation</Link>
-          <Link href="/components">Components</Link>
-          <Link href="/playground">Playground</Link>
-        </nav>
-        <a
-          className="github-link"
-          href="https://github.com/Zulaiy/natlas-kit"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Github size={17} />
-          <span>GitHub</span>
-          <ArrowUpRight size={14} />
-        </a>
+        <SiteNavigation />
+        <div className="site-header-actions">
+          <a
+            className="site-github"
+            href="https://github.com/Zulaiy/natlas-kit"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub repository"
+          >
+            <Github size={19} />
+          </a>
+          <Link className="site-start-button" href="/docs/quickstart">
+            Start building <ArrowRight size={14} />
+          </Link>
+        </div>
       </div>
     </header>
   );
 }
 export function Footer() {
   return (
-    <footer className="site-footer site-container">
-      <div>
-        <Link href="/">
-          <Logo />
-        </Link>
-        <p>Built for the languages we call home.</p>
+    <footer className="site-footer">
+      <div className="site-container">
+        <div className="site-footer-main">
+          <div className="site-footer-brand">
+            <Link href="/" aria-label="natlaskit home">
+              <Logo />
+            </Link>
+            <p>
+              Tools for the languages
+              <br />
+              we call home.
+            </p>
+            <span className="site-footer-license">
+              <i />
+              Independent toolkit · MIT licensed
+            </span>
+          </div>
+          <div className="site-footer-column">
+            <span>EXPLORE</span>
+            <Link href="/playground">Speech playground</Link>
+            <Link href="/components">Audio components</Link>
+            <Link href="/examples">Example applications</Link>
+          </div>
+          <div className="site-footer-column">
+            <span>BUILD</span>
+            <Link href="/docs/quickstart">Quickstart</Link>
+            <Link href="/docs/python">Python SDK</Link>
+            <Link href="/docs/typescript">TypeScript SDK</Link>
+            <Link href="/docs/api">API reference</Link>
+          </div>
+          <div className="site-footer-column">
+            <span>PROJECT</span>
+            <a href="https://github.com/Zulaiy/natlas-kit">
+              GitHub <ArrowUpRight size={12} />
+            </a>
+            <Link href="/docs/contributing">Contributing</Link>
+            <Link href="/docs/models">Official models</Link>
+          </div>
+        </div>
+        <div className="site-footer-bottom">
+          <span>Built for Nigerian speech.</span>
+          <p>
+            natlaskit is an independent developer toolkit. N-ATLAS models retain
+            their own access and licensing terms.
+          </p>
+          <span>natlaskit / v0.1</span>
+        </div>
       </div>
-      <div className="footer-links">
-        <Link href="/docs">Docs</Link>
-        <Link href="/playground">Playground</Link>
-        <a href="https://github.com/Zulaiy/natlas-kit">
-          Contribute <ArrowUpRight size={13} />
-        </a>
-      </div>
-      <p className="attribution">
-        N-ATLaS is an initiative of the Federal Ministry of Communications,
-        Innovation and Digital Economy, and powered by Awarri Technologies.
-        natlaskit is an independent developer toolkit.
-      </p>
     </footer>
   );
 }

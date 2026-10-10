@@ -3,318 +3,410 @@ import {
   ArrowRight,
   ArrowUpRight,
   AudioLines,
+  BookOpen,
   Braces,
   Check,
+  Code2,
   Cpu,
+  FileText,
   Layers,
   Mic,
   Terminal,
+  Waves,
 } from "lucide-react";
 import { Header, Footer } from "@/components/chrome";
 import { CodeTabs } from "@/components/code-tabs";
-const bars = Array.from(
-  { length: 61 },
-  (_, i) =>
-    14 + Math.round(Math.abs(Math.sin(i * 1.83) * Math.cos(i * 0.29)) * 79),
-);
+import { HomePreview } from "@/components/home-preview";
+import { languages } from "natlaskit";
+const visualBars = [
+  12, 17, 29, 41, 32, 16, 12, 24, 40, 61, 77, 59, 38, 19, 13, 28, 45, 63, 87,
+  75, 51, 35, 23, 12, 20, 37, 58, 71, 48, 31, 15, 10, 25, 39, 57, 71, 49, 33,
+  17, 12,
+];
 export default function Home() {
   return (
-    <>
+    <div className="marketing-page">
       <Header />
-      <main>
-        <section className="hero site-container">
-          <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="status-dot" />
-              N-ATLAS, made developer-friendly
-            </div>
+      <main id="main-content">
+        <section className="home-hero site-container">
+          <div className="home-hero-copy">
+            <Link className="home-announcement" href="/components">
+              <span>NEW</span>The audio interface kit <ArrowUpRight size={12} />
+            </Link>
             <h1>
-              Nigerian speech.
+              Build for the way
               <br />
-              <span>
-                Ready to build
-                <br />
-                with.
-              </span>
+              Nigeria <span>speaks.</span>
             </h1>
-            <p className="hero-description">
-              From a voice note to your next application. Python and TypeScript
-              SDKs, React components, and a clear path to N-ATLAS.
+            <p>
+              The building blocks for Nigerian speech. Python and TypeScript
+              SDKs, expressive React components, and a clear path from your
+              first recording to your next application.
             </p>
-            <div className="hero-actions">
+            <div className="home-hero-actions">
               <Link className="button primary" href="/docs/quickstart">
-                Start building <ArrowRight size={17} />
+                Start building <ArrowRight size={16} />
               </Link>
               <Link className="button secondary" href="/playground">
-                Try the playground <AudioLines size={17} />
+                Explore the playground <AudioLines size={16} />
               </Link>
             </div>
-            <div className="hero-footnote">
+            <div className="home-hero-meta">
               <span>
-                <Check size={14} /> CPU-first development
+                <Check size={12} />
+                MIT licensed code
               </span>
               <span>
-                <Check size={14} /> Open-source toolkit
+                <Check size={12} />
+                Your backend. Your application.
               </span>
             </div>
-          </div>
-          <div className="hero-visual">
-            <div className="visual-label">
-              <span className="tiny-cross">+</span> A VOICE. A LANGUAGE. A
-              POSSIBILITY.
-            </div>
-            <div className="speech-preview">
-              <div className="preview-top">
-                <span>
-                  <span className="status-dot" /> Speech to text
-                </span>
-                <span className="preview-badge">UI preview</span>
-              </div>
-              <div className="preview-language">
-                <span className="language-tag">EN</span>
-                <div>
-                  <strong>Nigerian English</strong>
-                  <span>N-ATLAS speech model</span>
-                </div>
-                <span className="model-size">~244M parameters</span>
-              </div>
-              <div className="waveform" aria-hidden="true">
-                {bars.map((height, i) => (
-                  <i
-                    key={i}
-                    style={{
-                      height: `${height}%`,
-                      opacity: 0.35 + Math.abs(Math.sin(i)) * 0.65,
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="audio-track">
-                <span>Example recording</span>
-                <span>00:12</span>
-              </div>
-              <div className="sample-transcript">
-                <div className="sample-label">
-                  ILLUSTRATIVE TRANSCRIPT <span>↳</span>
-                </div>
-                <p>
-                  “A small idea can become something that brings people
-                  together.”
-                </p>
-              </div>
-              <Link className="preview-action" href="/playground">
-                <Mic size={17} /> Bring your own voice{" "}
-                <ArrowUpRight size={16} />
-              </Link>
-            </div>
-            <div className="visual-foot">
-              <span className="mono">input: audio → output: possibility</span>
-              <span>01 / 04</span>
-            </div>
-            <div className="floating-token">
-              <Braces size={16} />
-              <span>built for your stack</span>
+            <div className="home-stack-label">
+              <span>BUILT FOR YOUR STACK</span>
+              <span>Python</span>
+              <span>TypeScript</span>
+              <span>React</span>
             </div>
           </div>
+          <HomePreview />
         </section>
-        <section className="language-strip">
-          <div className="site-container language-strip-inner">
-            <span className="small-label">
-              ONE TOOLKIT.
-              <br />
-              FOUR LANGUAGE MODELS.
-            </span>
-            {[
-              { name: "Hausa", word: "HA" },
-              { name: "Yoruba", word: "YO" },
-              { name: "Igbo", word: "IG" },
-              { name: "Nigerian English", word: "EN" },
-            ].map((item) => (
-              <Link
-                key={item.word}
-                href={`/playground?language=${item.word === "HA" ? "hausa" : item.word === "YO" ? "yoruba" : item.word === "IG" ? "igbo" : "english"}`}
-              >
-                <span>{item.word}</span>
-                {item.name}
-                <ArrowUpRight size={14} />
+        <section className="home-languages">
+          <div className="site-container">
+            <div className="home-language-intro">
+              <span className="site-overline">CLOSER TO HOME</span>
+              <p>
+                Four languages.
+                <br />
+                One familiar interface.
+              </p>
+            </div>
+            {languages.map((item) => (
+              <Link key={item.id} href={`/playground?language=${item.id}`}>
+                <span className="home-language-code">{item.code}</span>
+                <span>
+                  {item.label}
+                  <small>Official N-ATLAS speech model</small>
+                </span>
+                <ArrowUpRight size={13} />
               </Link>
             ))}
           </div>
         </section>
-        <section className="section site-container build-section" id="sdk">
-          <div className="section-intro">
-            <div className="eyebrow">LESS SETUP. MORE BUILDING.</div>
+        <section className="home-sdk-section site-container" id="sdk">
+          <div className="home-section-copy">
+            <span className="site-overline">
+              <Braces size={13} /> FROM AUDIO TO APPLICATION
+            </span>
             <h2>
-              Your first transcript.
-              <br />
-              Then your next big thing.
+              A familiar API.
+              <br />A world of possibilities.
             </h2>
             <p>
-              A familiar interface for the official N-ATLAS speech models.
-              Connect your service, pick a language, and put the transcript to
-              work.
+              Choose your language and connect your speech service. The SDK
+              handles uploads and job status, so you can focus on what your
+              application does next.
             </p>
-            <div className="numbered-step">
-              <span>01</span>
-              <div>
-                <strong>Connect your speech service</strong>
-                <p>
-                  Run the CPU backend locally or point to your own deployment.
-                </p>
-              </div>
+            <div className="home-sdk-links">
+              {[
+                {
+                  title: "Python SDK",
+                  text: "Backend integration and local CPU inference.",
+                  href: "/docs/python",
+                  icon: Terminal,
+                },
+                {
+                  title: "TypeScript SDK",
+                  text: "A typed client for Node.js and web applications.",
+                  href: "/docs/typescript",
+                  icon: Code2,
+                },
+                {
+                  title: "React components",
+                  text: "The interaction layer, ready to make your own.",
+                  href: "/docs/react",
+                  icon: Layers,
+                },
+              ].map(({ title, text, href, icon: Icon }) => (
+                <Link key={href} href={href}>
+                  <span>
+                    <Icon size={17} />
+                  </span>
+                  <div>
+                    <strong>{title}</strong>
+                    <p>{text}</p>
+                  </div>
+                  <ArrowUpRight size={14} />
+                </Link>
+              ))}
             </div>
-            <div className="numbered-step">
-              <span>02</span>
-              <div>
-                <strong>Use the SDK you know</strong>
-                <p>
-                  Python for your backend. TypeScript across your application.
-                </p>
-              </div>
-            </div>
-            <div className="numbered-step">
-              <span>03</span>
-              <div>
-                <strong>Make it yours</strong>
-                <p>
-                  Add recording, uploads, and transcripts with React components.
-                </p>
-              </div>
-            </div>
-            <Link className="text-link" href="/docs/quickstart">
-              Read the quickstart <ArrowRight size={16} />
-            </Link>
           </div>
-          <CodeTabs />
+          <div className="home-sdk-window">
+            <div className="home-window-label">
+              <span>
+                <Terminal size={12} />
+                YOUR FIRST INTEGRATION
+              </span>
+              <span>01 / SDK</span>
+            </div>
+            <CodeTabs />
+            <div className="home-sdk-note">
+              <i />
+              Same SDK. Same models. In the playground and your app.
+            </div>
+          </div>
         </section>
-        <section className="component-section">
+        <section className="home-components-section">
           <div className="site-container">
-            <div className="section-heading">
+            <div className="home-section-heading">
               <div>
-                <div className="eyebrow">A HEAD START FOR YOUR INTERFACE</div>
+                <span className="site-overline">
+                  THE DETAILS MAKE THE DIFFERENCE
+                </span>
                 <h2>
-                  Good components.
-                  <br />
-                  Great starting points.
+                  Sound deserves
+                  <br />a beautiful interface.
                 </h2>
               </div>
-              <Link className="button secondary" href="/components">
-                Explore components <ArrowUpRight size={16} />
+              <div>
+                <p>
+                  Audio controls that feel considered.
+                  <br />
+                  Composable, accessible, and ready for your app.
+                </p>
+                <Link className="text-link" href="/components">
+                  Explore the component library <ArrowUpRight size={14} />
+                </Link>
+              </div>
+            </div>
+            <div className="home-component-grid">
+              <Link className="home-component-tile" href="/components#recorder">
+                <div className="home-component-canvas home-capture-art">
+                  <span className="home-art-label">CAPTURE / PREVIEW</span>
+                  <div className="home-mic-orbit">
+                    <Mic size={27} strokeWidth={1.4} />
+                  </div>
+                  <div className="home-mini-wave" aria-hidden="true">
+                    {visualBars.map((height, i) => (
+                      <i key={i} style={{ height: height * 0.38 }} />
+                    ))}
+                  </div>
+                  <span className="home-art-caption">
+                    A voice note is a beginning.
+                  </span>
+                </div>
+                <div className="home-component-caption">
+                  <span>01</span>
+                  <div>
+                    <h3>Capture the moment</h3>
+                    <p>Live levels, input selection, pause and resume.</p>
+                  </div>
+                  <ArrowUpRight size={18} />
+                </div>
+              </Link>
+              <Link
+                className="home-component-tile"
+                href="/components#audio-player"
+              >
+                <div className="home-component-canvas home-playback-art">
+                  <span className="home-art-label">PLAYBACK / PREVIEW</span>
+                  <div className="home-wave-sculpture" aria-hidden="true">
+                    {visualBars.map((height, i) => (
+                      <i
+                        key={i}
+                        style={{
+                          height: height * 0.95,
+                          background: i < 16 ? "#17755a" : undefined,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="home-playback-time">
+                    <span>00:03</span>
+                    <span>Sound, in focus.</span>
+                    <span>00:08</span>
+                  </div>
+                </div>
+                <div className="home-component-caption">
+                  <span>02</span>
+                  <div>
+                    <h3>Find your moment</h3>
+                    <p>Waveform seeking, playback speed, and mute.</p>
+                  </div>
+                  <ArrowUpRight size={18} />
+                </div>
+              </Link>
+              <Link
+                className="home-component-tile"
+                href="/components#transcript"
+              >
+                <div className="home-component-canvas home-output-art">
+                  <span className="home-art-label">TRANSCRIPT / PREVIEW</span>
+                  <div className="home-transcript-paper">
+                    <FileText size={17} />
+                    <p>
+                      Every voice
+                      <br />
+                      carries a <span>possibility.</span>
+                    </p>
+                    <small>ILLUSTRATIVE TEXT</small>
+                  </div>
+                </div>
+                <div className="home-component-caption">
+                  <span>03</span>
+                  <div>
+                    <h3>Put words to work</h3>
+                    <p>Readable results, JSON, copy, and download.</p>
+                  </div>
+                  <ArrowUpRight size={18} />
+                </div>
               </Link>
             </div>
-            <div className="component-grid">
-              <Link href="/components#recorder" className="component-card">
-                <div className="component-art recorder-art">
-                  <div className="mic-circle">
-                    <Mic size={24} />
-                  </div>
-                  <span className="mini-wave">▁ ▃ ▆ ▄ █ ▅ ▂ ▅ ▇ ▃ ▁</span>
-                  <span className="art-tag">record → transcribe</span>
-                </div>
-                <div className="card-caption">
-                  <div>
-                    <h3>Audio recorder</h3>
-                    <p>Permission, recording, and playback.</p>
-                  </div>
-                  <ArrowUpRight size={18} />
-                </div>
-              </Link>
-              <Link href="/components#transcript" className="component-card">
-                <div className="component-art transcript-art">
-                  <div className="mini-transcript">
-                    <span className="small-label">TRANSCRIPT</span>
-                    <p>
-                      Your words,
-                      <br />
-                      in your interface
-                      <span className="cursor-block" />.
-                    </p>
-                    <span className="mini-copy">Copy text ↗</span>
-                  </div>
-                </div>
-                <div className="card-caption">
-                  <div>
-                    <h3>Transcript panel</h3>
-                    <p>Processing states and copy controls.</p>
-                  </div>
-                  <ArrowUpRight size={18} />
-                </div>
-              </Link>
-              <Link href="/docs/react" className="component-card">
-                <div className="component-art hooks-art">
-                  <div className="hook-code">
-                    <span>const</span> {"{ transcribe }"}
-                    <br /> = <strong>useTranscription</strong>({"{"}
-                    <br /> &nbsp; baseUrl: <em>'/api/speech'</em>
-                    <br />
-                    {"}"});
-                  </div>
-                  <span className="art-tag">your UI. our hooks.</span>
-                </div>
-                <div className="card-caption">
-                  <div>
-                    <h3>Composable hooks</h3>
-                    <p>The behaviour, without the styling.</p>
-                  </div>
-                  <ArrowUpRight size={18} />
-                </div>
-              </Link>
+            <div className="home-component-foot">
+              <span>
+                <Waves size={14} />
+                Light and dark styles included.
+              </span>
+              <span>React 19 · CSS variables · Reduced motion</span>
             </div>
           </div>
         </section>
-        <section className="section site-container principles">
-          <div>
-            <div className="eyebrow">MADE FOR THE WAY YOU BUILD</div>
-            <h2>
-              Local first.
-              <br />
-              Possibilities everywhere.
-            </h2>
+        <section className="home-path-section site-container">
+          <div className="home-section-heading">
+            <div>
+              <span className="site-overline">
+                A CLEAR PATH TO SOMETHING REAL
+              </span>
+              <h2>
+                Start small.
+                <br />
+                Build something yours.
+              </h2>
+            </div>
+            <Link className="text-link" href="/docs/quickstart">
+              Follow the quickstart <ArrowRight size={14} />
+            </Link>
           </div>
-          <div className="principle-list">
+          <div className="home-path-grid">
             {[
               {
+                number: "01",
                 icon: Cpu,
-                title: "A practical CPU starting point",
-                body: "Start with short recordings and one model. Our guides explain model access, memory, and deployment.",
+                title: "Connect your speech service",
+                body: "Run the Python backend on CPU. Our guides cover model access, configuration, and your first short recording.",
+                href: "/docs/quickstart",
               },
               {
-                icon: Terminal,
-                title: "One path from example to application",
-                body: "The playground uses the same SDKs and components you install. Take the code into your own project.",
+                number: "02",
+                icon: Braces,
+                title: "Integrate with your stack",
+                body: "Use Python or TypeScript to submit audio and retrieve a transcript through the same API contract.",
+                href: "/examples",
               },
               {
+                number: "03",
                 icon: Layers,
-                title: "An open foundation to extend",
-                body: "A shared API contract, readable source, and contribution guides make the toolkit yours to build on.",
+                title: "Make the experience yours",
+                body: "Bring the audio components into your app. Keep credentials on your server and build around the result.",
+                href: "/docs/react",
               },
-            ].map(({ icon: Icon, title, body }) => (
-              <div className="principle" key={title}>
-                <Icon size={22} />
+            ].map(({ number, icon: Icon, title, body, href }) => (
+              <Link key={number} href={href}>
                 <div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+                  <span>{number}</span>
+                  <Icon size={20} />
                 </div>
-              </div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+                <span className="home-path-arrow">
+                  <ArrowUpRight size={15} />
+                </span>
+              </Link>
             ))}
           </div>
         </section>
-        <section className="site-container final-cta">
+        <section className="home-docs-banner site-container">
+          <span className="home-docs-icon">
+            <BookOpen size={27} strokeWidth={1.3} />
+          </span>
           <div>
-            <span className="eyebrow">FROM HERE, IT'S YOURS.</span>
+            <span className="site-overline">
+              GOOD DOCUMENTATION IS PART OF THE TOOLKIT
+            </span>
+            <h2>
+              A place to start.
+              <br />
+              And a guide for what’s next.
+            </h2>
+            <p>
+              Quickstarts, SDK guides, model references, and working examples.
+            </p>
+          </div>
+          <Link className="button secondary" href="/docs">
+            Read the documentation <ArrowUpRight size={16} />
+          </Link>
+        </section>
+        <section className="home-faq site-container">
+          <div>
+            <span className="site-overline">BEFORE YOU BUILD</span>
+            <h2>A few useful answers.</h2>
+            <p>
+              More detail in the{" "}
+              <Link href="/docs">
+                developer docs <ArrowUpRight size={11} />
+              </Link>
+              .
+            </p>
+          </div>
+          <div>
+            {[
+              {
+                q: "What can I build with natlaskit?",
+                a: "Speech recognition applications using the official N-ATLAS models for Hausa, Yoruba, Igbo, and Nigerian-accented English. The toolkit includes Python and TypeScript SDKs, a CPU service, and React audio components.",
+              },
+              {
+                q: "Can I get started on a CPU?",
+                a: "The Python speech service supports CPU inference. Start with recordings up to 30 seconds and one language model. Memory requirements and processing time depend on the model and your machine; performance has not yet been benchmarked.",
+              },
+              {
+                q: "Are the packages on npm and PyPI?",
+                a: "This is currently a source release. Build from the repository or install the locally packed packages. The quickstart walks through the setup.",
+              },
+              {
+                q: "Do I need access to the models?",
+                a: "Yes. Accept the selected model’s terms on Hugging Face and configure your access token in the speech service. Model access and licensing are separate from the toolkit’s MIT licence.",
+              },
+            ].map((item) => (
+              <details key={item.q}>
+                <summary>
+                  {item.q}
+                  <span>+</span>
+                </summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+        <section className="home-final-cta site-container">
+          <div>
+            <span className="site-overline">YOUR NEXT IDEA STARTS HERE</span>
             <h2>
               Build something
               <br />
-              that speaks to home.
+              closer to home.
             </h2>
-            <p>Start with one recording. See where it takes you.</p>
+            <p>The languages are ours. The possibilities are yours.</p>
+            <Link className="button" href="/docs/quickstart">
+              Get started with natlaskit <ArrowRight size={16} />
+            </Link>
           </div>
-          <Link className="button dark" href="/docs/quickstart">
-            Get started with natlaskit <ArrowRight size={18} />
-          </Link>
+          <div className="home-cta-wave" aria-hidden="true">
+            {visualBars.map((height, i) => (
+              <i key={i} style={{ height: height * 2.2 }} />
+            ))}
+          </div>
         </section>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

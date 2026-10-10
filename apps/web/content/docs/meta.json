@@ -1,16 +1,21 @@
 {
   "title": "Documentation",
   "pages": [
+    "---GETTING STARTED---",
     "index",
     "quickstart",
+    "---SDKS & COMPONENTS---",
     "python",
-    "cli",
     "typescript",
     "react",
+    "cli",
+    "---REFERENCE---",
     "models",
     "api",
+    "---GUIDES---",
     "deployment",
     "troubleshooting",
+    "---PROJECT---",
     "beta-testing",
     "contributing"
   ]

@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { ArrowUpRight, Github, LifeBuoy } from "lucide-react";
+import { CopyPageLink } from "@/components/doc-page-actions";
 import { notFound } from "next/navigation";
 import {
   DocsPage,
@@ -17,10 +20,57 @@ export default async function Page({
   if (!page) notFound();
   const MDX = page.data.body;
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
+    <DocsPage
+      className="docs-article"
+      toc={page.data.toc}
+      full={page.data.full}
+      tableOfContent={{
+        style: "clerk",
+        footer: (
+          <div className="docs-toc-help">
+            <LifeBuoy size={15} />
+            <strong>Need a hand?</strong>
+            <Link href="/docs/troubleshooting">
+              Troubleshooting <ArrowUpRight size={12} />
+            </Link>
+            <Link href="/docs/contributing">
+              Improve the docs <ArrowUpRight size={12} />
+            </Link>
+          </div>
+        ),
+      }}
+      footer={{ className: "docs-pagination" }}
+    >
+      <div className="docs-article-header">
+        <div className="docs-article-meta">
+          <span>
+            {["python", "typescript", "react", "cli"].includes(slug?.[0] ?? "")
+              ? "SDKS & COMPONENTS"
+              : ["models", "api"].includes(slug?.[0] ?? "")
+                ? "REFERENCE"
+                : ["deployment", "troubleshooting"].includes(slug?.[0] ?? "")
+                  ? "GUIDES"
+                  : ["beta-testing", "contributing"].includes(slug?.[0] ?? "")
+                    ? "PROJECT"
+                    : "GETTING STARTED"}
+          </span>
+          <div>
+            <CopyPageLink />
+            <a
+              href={`https://github.com/Zulaiy/natlas-kit/blob/main/apps/web/content/docs/${slug?.length ? slug.join("/") : "index"}.mdx`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Github size={13} />
+              Source
+              <ArrowUpRight size={11} />
+            </a>
+          </div>
+        </div>
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <DocsDescription>{page.data.description}</DocsDescription>
+      </div>
+      <DocsBody className="docs-prose">
         <MDX components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>

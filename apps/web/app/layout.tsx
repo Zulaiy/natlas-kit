@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import "./globals.css";
+import "./marketing.css";
+import "./docs.css";
 import "@natlaskit/react/styles.css";
 export const metadata: Metadata = {
   title: {
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 };
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
         <RootProvider theme={{ forcedTheme: "light", enableSystem: false }}>
           {children}
